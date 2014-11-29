@@ -12,5 +12,8 @@ public:
 	void draw();
 	void keyPressed(int key);
 
+    void addSample(double x, double y);
+    float testSample(double x, double y);
+    
 	ofxGMM gmm;
 };

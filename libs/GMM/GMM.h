@@ -13,10 +13,12 @@ History:
 class GMM
 {
 public:
-	GMM(int dimNum = 1, int mixNum = 1);
+	GMM();
 	~GMM();
-
+    
 	void Copy(GMM* gmm);
+
+    void setup(int dimNum = 1, int mixNum = 1);
 
 	void SetMaxIterNum(int i)	{ m_maxIterNum = i; }
 	void SetEndError(double f)	{ m_endError = f; }

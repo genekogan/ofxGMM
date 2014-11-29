@@ -17,7 +17,11 @@ using namespace std;
 
 //double M_PI=3.14159;
 
-GMM::GMM(int dimNum, int mixNum)
+GMM::GMM() {
+    
+}
+
+void GMM::setup(int dimNum, int mixNum)
 {
 	m_dimNum = dimNum;
 	m_mixNum = mixNum;
