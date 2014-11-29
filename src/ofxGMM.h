@@ -16,6 +16,9 @@ public:
     
     void setGaussians(vector<double> priors, vector<vector<double> > means, vector<vector<double> > variances);
 
+    int getDimension() {return dim;}
+    int getNumGaussians() {return numGaussians;}
+    
     // get gaussians
     vector<double> getMean(int mixNumber);
     vector<double> getVariance(int mixNumber);
