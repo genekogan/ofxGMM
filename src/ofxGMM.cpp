@@ -1,9 +1,11 @@
 #include "ofxGMM.h"
 
 
-void ofxGMM::setup(int dim, int mixNum) {
+void ofxGMM::setup(int dim, int numGaussians) {
     this->dim = dim;
-    this->mixNum = mixNum;
+    this->numGaussians = numGaussians;
+    samples.clear();
+    gmm.setup(dim, numGaussians);
 }
 
 void ofxGMM::addSample(vector<double> sample) {
@@ -16,7 +18,6 @@ void ofxGMM::addSample(vector<double> sample) {
 
 void ofxGMM::train() {
     int numSamples = samples.size();
-    
     double data[dim * numSamples];
     int idx = 0;
     for (int s=0; s<samples.size(); s++) {
@@ -24,9 +25,60 @@ void ofxGMM::train() {
             data[idx++] = samples[s][i];
         }
     }
-    
-    gmm.setup(dim, mixNum);
     gmm.Train(data, numSamples); //Training GMM
+}
+
+void ofxGMM::setGaussians(vector<double> priors, vector<vector<double> > means, vector<vector<double> > variances) {
+    if (priors.size() != means.size() || priors.size() != variances.size()) {
+        ofLog(OF_LOG_ERROR, "Error: priors, means, and variances must have same number of gaussians");
+        return;
+    }
+    numGaussians = priors.size();
+    dim = means[0].size();
+    
+    setup(dim, numGaussians);
+    for (int i=0; i<numGaussians; i++) {
+        gmm.setPrior(i, priors[i]);
+        double mean[dim];
+        double variance[dim];
+        for (int j=0; j<dim; j++) {
+            mean[j] = means[i][j];
+            variance[j] = variances[i][j];
+        }
+        gmm.setMean(i, mean);
+        gmm.setVariance(i, variance);
+    }
+}
+
+vector<double> ofxGMM::getMean(int mixNumber) {
+    double * m = gmm.Mean(mixNumber);
+    vector<double> mean;
+    for (int j=0; j<dim; j++) {
+        mean.push_back(m[j]);
+    }
+    return mean;
+}
+
+vector<double> ofxGMM::getVariance(int mixNumber) {
+    double * var = gmm.Variance(mixNumber);
+    vector<double> variance;
+    for (int j=0; j<dim; j++) {
+        variance.push_back(var[j]);
+    }
+    return variance;
+}
+
+vector<double> ofxGMM::getStandardDeviation(int mixNumber) {
+    double * var = gmm.Variance(mixNumber);
+    vector<double> standardDeviation;
+    for (int j=0; j<dim; j++) {
+        standardDeviation.push_back(sqrt(var[j]));
+    }
+    return standardDeviation;
+}
+
+double ofxGMM::getPrior(int mixNumber) {
+    return gmm.Prior(mixNumber);
 }
 
 float ofxGMM::getProbability(vector<double> sample) {

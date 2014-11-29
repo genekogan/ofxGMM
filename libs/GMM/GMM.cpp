@@ -23,6 +23,8 @@ GMM::GMM() {
 
 void GMM::setup(int dimNum, int mixNum)
 {
+    Dispose();
+    
 	m_dimNum = dimNum;
 	m_mixNum = mixNum;
 
