@@ -13,12 +13,6 @@ void ofxGMM::addSample(vector<double> sample) {
         ofLog(OF_LOG_ERROR, "Error: sample size ("+ofToString(sample.size())+") doesn't match set dimension ("+ofToString(dim)+")");
         return;
     }
-    cout <<"add ";
-    for (int i=0; i<sample.size(); i++) {
-        cout << sample[i]<<",";
-    }
-    cout << endl;
-    
     samples.push_back(sample);
 }
 
