@@ -108,6 +108,7 @@ void ofApp::draw() {
     // draw random sample on grid
     ofSetColor(0, 0, 255);
     ofCircle(randSample[0], randSample[1], 10);
+    ofDrawBitmapString("random sample", randSample[0]+8, randSample[1]);
     
     // get mixture parameters
     for (int i=0; i<numGaussians; i++) {
