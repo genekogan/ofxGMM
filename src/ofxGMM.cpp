@@ -93,6 +93,28 @@ float ofxGMM::getProbability(vector<double> sample) {
     return gmm.GetProbability(testData);
 }
 
+vector<double> ofxGMM::getRandomSample(int idxMix) {
+    // first select which gaussian to sample from if none given as argument (default)
+    if (idxMix == -1) {
+        idxMix = 0;
+        float cumulativePrior = 0.0;
+        float randn = ofRandom(1);
+        while (cumulativePrior < randn) {
+            cumulativePrior += gmm.Prior(idxMix++);
+        }
+        idxMix--;
+    }
+    double * m = gmm.Mean(idxMix);
+    double * var = gmm.Variance(idxMix);
+    
+    vector<double> randomSample;
+    randomSample.resize(dim);
+    for (int i=0; i<dim; i++) {
+        randomSample[i] = m[i] + getRandomGaussian() * sqrt(var[i]);
+    }
+    return randomSample;
+}
+
 void ofxGMM::save(string path) {
     const char *filepath = path.c_str();
 	ofstream gmm_file(filepath);
@@ -103,4 +125,23 @@ void ofxGMM::save(string path) {
 }
 
 void ofxGMM::load(string path) {
+    const char *filepath = path.c_str();
+	ifstream gmm_file(filepath);
+	assert(gmm_file);
+	gmm_file >> gmm;
+	gmm_file.close();
+}
+
+// implementation of Box–Muller method for sampling a random gaussian
+// taken from https://github.com/andyr0id/ofxGaussian/blob/master/src/ofxGaussian.cpp
+float ofxGMM::getRandomGaussian() {
+    float v1, v2, s;
+    do {
+        v1 = 2 * ofRandomf() - 1;
+        v2 = 2 * ofRandomf() - 1;
+        s = v1 * v1 + v2 * v2;
+    }
+    while (s >= 1 || s == 0);
+    float multiplier = sqrt(-2 * log(s)/s);
+    return v1 * multiplier;
 }

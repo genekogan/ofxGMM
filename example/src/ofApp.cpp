@@ -31,6 +31,9 @@ void ofApp::trainGMMFromData() {
 
     // train the GMM from data
     gmm.train();
+    
+    // get a random sample from the GMM
+    randSample = gmm.getRandomSample();
 }
 
 void ofApp::setGMMExplicitly() {
@@ -102,7 +105,9 @@ void ofApp::draw() {
         }
     }
     
-    ofSetColor(0, 255, 0);
+    // draw random sample on grid
+    ofSetColor(0, 0, 255);
+    ofCircle(randSample[0], randSample[1], 10);
     
     // get mixture parameters
     for (int i=0; i<numGaussians; i++) {
@@ -111,6 +116,7 @@ void ofApp::draw() {
         vector<double> std = gmm.getStandardDeviation(i);
         double prior = gmm.getPrior(i);
         string msg = "Gaussian #"+ofToString(i)+" : prior ("+ofToString(prior)+"), mean ("+ofToString(mean[0])+", "+ofToString(mean[1])+"), standard deviation ("+ofToString(std[0])+", "+ofToString(std[1])+")";
+        ofSetColor(0, 255, 0);
         ofDrawBitmapString(msg, 15, 20 + 20*i);
     }
     
@@ -124,10 +130,11 @@ void ofApp::draw() {
 
     // message about controls
     ofSetColor(255, 0, 0);
-    ofDrawBitmapString("Press '1' for example of training GMM from data\nPress '2' for example of setting GMM explicitly", 20, ofGetHeight()-50);
+    ofDrawBitmapString("Press '1' for example of training GMM from data\nPress '2' for example of setting GMM explicitly\nPress spacebar to sample random point from GMM", 20, ofGetHeight()-50);
 }
 
 void ofApp::keyPressed(int key) {
-    if      (key=='1')   trainGMMFromData();
-    else if (key=='2')   setGMMExplicitly();
+    if      (key=='1')  trainGMMFromData();
+    else if (key=='2')  setGMMExplicitly();
+    else if (key==' ')  randSample = gmm.getRandomSample();
 }

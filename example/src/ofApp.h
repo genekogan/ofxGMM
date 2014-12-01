@@ -14,6 +14,7 @@ public:
     
     void trainGMMFromData();
     void setGMMExplicitly();
+    void sampleFromGMM();
 
     void addSample(double x, double y);
     float testSample(double x, double y);
@@ -21,4 +22,6 @@ public:
 	ofxGMM gmm;
     
     int numGaussians;
+    
+    vector<double> randSample;
 };

@@ -24,14 +24,20 @@ public:
     vector<double> getVariance(int mixNumber);
     vector<double> getStandardDeviation(int mixNumber);
     double getPrior(int mixNumber);
-
+    
     // get a single probability
     float getProbability(vector<double> sample);
-
+    
+    // sample from GMM
+    vector<double> getRandomSample(int idxMix=-1);
+    
+    // save/load gmm to file
     void save(string path);
     void load(string path);
     
 private:
+    
+    float getRandomGaussian();
     
     vector<vector<double> > samples;
     GMM gmm;
