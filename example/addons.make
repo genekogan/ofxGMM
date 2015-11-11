@@ -1,7 +1,1 @@
-ofxKinect
-ofxOpenCv
-ofxXmlSettings
-ofxCv
-ofxKinectProjectorToolkit
-ofxSecondWindow
-ofxUI
+ofxGMM
